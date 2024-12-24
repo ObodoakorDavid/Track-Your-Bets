@@ -14,8 +14,6 @@ export const verifyToken = (
     return res.status(403).json({ message: "No token provided" });
   }
 
-  console.log({ token });
-
   try {
     const decoded = jwt.verify(
       token,
@@ -23,7 +21,8 @@ export const verifyToken = (
     ) as DecodedToken;
     req.user = decoded;
     next();
-  } catch (error) {
+  } catch (error: unknown) {
+    console.log(error);
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 };

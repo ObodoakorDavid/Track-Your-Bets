@@ -21,15 +21,23 @@ export async function GET(req: NextRequest) {
       "-password"
     );
 
-    console.log({ user });
-
     if (!user) {
       return new NextResponse("User not found", { status: 404 });
     }
 
     return NextResponse.json({ user });
-  } catch (error: any) {
-    console.error("Error fetching user:", error.message || error);
+  } catch (error: unknown) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      console.error("JWT error:", error.message);
+      return new NextResponse("Invalid token", { status: 401 });
+    }
+
+    if (error instanceof Error) {
+      console.error("Error fetching user:", error.message);
+    } else {
+      console.error("Unexpected error:", error);
+    }
+
     return new NextResponse("Something went wrong", { status: 500 });
   }
 }

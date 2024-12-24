@@ -2,6 +2,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 import bcrypt from "bcryptjs";
 import { jwtVerify, SignJWT } from "jose";
+import { JwtPayload } from "jsonwebtoken";
 
 export interface IUser extends Document {
   userName: string;
@@ -9,7 +10,7 @@ export interface IUser extends Document {
   password: string;
   comparePassword(password: string): Promise<boolean>;
   generateAuthToken(): Promise<string>;
-  verifyAuthToken(token: string): Promise<any>;
+  verifyAuthToken(token: string): Promise<JwtPayload>;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -60,6 +61,7 @@ UserSchema.methods.verifyAuthToken = async function (token: string) {
     const { payload } = await jwtVerify(token, secret);
     return payload;
   } catch (error) {
+    console.log(error);
     throw new Error("Invalid or expired token");
   }
 };

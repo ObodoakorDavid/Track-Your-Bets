@@ -48,7 +48,7 @@ const SummaryCard: React.FC<SummaryProps> = ({ summary }) => {
       params.set("withVoid", defaultWithVoid.toString());
 
     router.replace(`${window.location.pathname}?${params.toString()}`);
-  }, [router]);
+  }, [router, defaultMonth, defaultWithVoid, defaultYear]);
 
   const handleMonthChange = (value: string) => {
     setMonth(value);

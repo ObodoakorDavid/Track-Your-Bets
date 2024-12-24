@@ -31,16 +31,16 @@ export default function SignupPage() {
       const response = await axios.post("/api/auth/signup", data);
 
       if (response.status === 201) {
-        console.log("redirect");
-
-        // Navigate to dashboard after successful signup
         router.push("/dashboard");
       }
-    } catch (err: any) {
+    } catch (err) {
       console.log(err);
-
-      // Handle error messages from the server
-      setError(err.response?.data || "An unexpected error occurred");
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || "An unexpected error occurred");
+      } else {
+        // Fallback for non-Axios errors
+        setError("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }

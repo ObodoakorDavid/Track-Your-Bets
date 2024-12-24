@@ -4,6 +4,16 @@ import BetSummary, { IBetSummary } from "@/models/betSummary";
 import connectToDatabase from "@/lib/mongoose";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { DecodedToken } from "@/lib/next";
+
+interface Query {
+  userId: string;
+  outcome?: string;
+  date?: {
+    $gte: Date;
+    $lte: Date;
+  };
+}
 
 // Utility to verify JWT and extract user ID
 const getUserIdFromToken = async (): Promise<string | null> => {
@@ -11,7 +21,10 @@ const getUserIdFromToken = async (): Promise<string | null> => {
   if (!token) return null;
 
   try {
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET as string
+    ) as DecodedToken;
     return decoded?.id || null;
   } catch {
     return null;
@@ -45,7 +58,7 @@ export async function GET(request: Request) {
     const skip = (page - 1) * limit;
 
     // Build query
-    const query: Record<string, any> = { userId };
+    const query: Query = { userId };
     if (outcome) query.outcome = outcome;
     if (month && year) {
       query.date = getDateRange(parseInt(month, 10), parseInt(year, 10));

@@ -16,8 +16,6 @@ interface PaginationProps {
 const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const router = useRouter();
 
-  const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-
   const onPageChange = (page: number) => {
     router.push(window.location.pathname + "?" + `page=${page.toString()}`);
   };

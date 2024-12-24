@@ -1,13 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Home,
-  BarChart,
-  Activity,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from "lucide-react";
+import { Home, Activity, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 const links = [
   { href: "/dashboard", label: "Home", icon: <Home className="w-4" /> },

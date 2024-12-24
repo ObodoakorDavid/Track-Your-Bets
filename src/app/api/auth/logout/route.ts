@@ -1,9 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { NextApiResponse } from "next";
-import { NextApiRequest } from "next/types";
+import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST() {
   const cookieStore = await cookies();
   cookieStore.delete("token");
   return new NextResponse("Logged out successfully", {

@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const token = jwt.sign(
       { email: newUser.email, id: newUser._id },
       process.env.JWT_SECRET as string,
-      { expiresIn: "1h" } 
+      { expiresIn: "1h" }
     );
 
     // Prepare the response
@@ -46,11 +46,22 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
-    console.error("Error creating user:", error.message || error);
-    if (error.errors) {
-      console.error("Validation Errors:", error.errors); // Log Mongoose validation errors
+  } catch (error: unknown) {
+    // Type narrowing for error
+    if (error instanceof Error) {
+      console.error("Error creating user:", error.message);
+    } 
+
+    // Specific handling for Mongoose validation errors
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "errors" in error &&
+      typeof error.errors === "object"
+    ) {
+      console.error("Validation Errors:", error.errors);
     }
+
     return new NextResponse("Something went wrong", { status: 500 });
   }
 }

@@ -24,7 +24,9 @@ export default function Dropdown({ user }: Userprops) {
       if (response.status === 200) {
         router.push("/");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      console.log(err);
+
       // Handle error messages from the server
     }
   };

@@ -1,5 +1,3 @@
-import { NextApiRequest } from "next";
-
 declare module "next" {
   interface NextApiRequest {
     user?: DecodedToken; // Add user property

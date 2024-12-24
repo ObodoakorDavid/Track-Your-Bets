@@ -33,12 +33,17 @@ export default function LoginPage() {
         // Redirect to dashboard after successful login
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      console.log(err);
-
-      setError(
-        err.response?.data?.message || "Login failed. Please try again."
-      );
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(
+          err.response?.data?.message || "Login failed. Please try again."
+        );
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred. Please try again.");
+      }
+      console.error(err); // Log the error for debugging
     }
   };
 
@@ -49,14 +54,10 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium pb-1">Email</label>
-
             <Input
               type="email"
               {...register("email", { required: "Email is required" })}
-              className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover ${
-                // errors.email ? "border-red-500" : ""
-                ""
-              }`}
+              className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover`}
               placeholder="Enter your email"
             />
             {errors.email && (
@@ -70,13 +71,9 @@ export default function LoginPage() {
             <Input
               type="password"
               {...register("password", { required: "Password is required" })}
-              className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover ${
-                // errors.password ? "border-red-500" : ""
-                ""
-              }`}
+              className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover`}
               placeholder="Enter your password"
             />
-
             {errors.password && (
               <p className="text-sm text-red-500 mt-1">
                 {errors.password.message}
@@ -92,8 +89,9 @@ export default function LoginPage() {
             {isSubmitting ? "Logging in..." : "Login"}
           </Button>
         </form>
+
         <p className="mt-4 text-sm">
-          Don't have an account?{" "}
+          Don&apost have an account?
           <a
             href="/signup"
             className="text-primary underline font-semibold hover:text-hover"
