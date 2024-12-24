@@ -34,12 +34,12 @@ async function getBets(
 export default async function BetsPage({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     page?: string;
     year?: string;
     month?: string;
     withVoid?: string;
-  };
+  }>;
 }) {
   const params = await searchParams;
   const page = params?.page ? parseInt(params.page, 10) : 1;
