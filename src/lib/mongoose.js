@@ -23,7 +23,7 @@ async function connectToDatabase() {
         dbName:
           process.env.NODE_ENV === "development"
             ? "Track-Your-Bets"
-            : "Track-YourBets-Live",
+            : "Track-Your-Bets-Live",
       })
       .then((mongooseInstance) => {
         return mongooseInstance;
