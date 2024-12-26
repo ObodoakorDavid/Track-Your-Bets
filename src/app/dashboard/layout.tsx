@@ -3,12 +3,13 @@ import Sidebar from "@/components/sidebar";
 import Dropdown from "@/components/Dropdown";
 import { cookies } from "next/headers";
 import { Bell } from "lucide-react";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function getUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  const response = await fetch("http://localhost:3000/api/user", {
+  const response = await fetch(`${API_BASE_URL}/api/user`, {
     headers: {
       Cookie: `token=${token};`,
     },
@@ -20,8 +21,6 @@ async function getUser() {
   }
 
   const data = await response.json();
-  console.log({ data });
-
   return data.user;
 }
 

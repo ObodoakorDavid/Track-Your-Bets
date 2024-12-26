@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/Pagination";
 import { cookies } from "next/headers";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 async function getBets(
   page: number,
@@ -16,7 +17,7 @@ async function getBets(
   const token = cookieStore.get("token")?.value;
 
   const response = await fetch(
-    `http://localhost:3000/api/bets?page=${page}&month=${month}&year=${year}&withVoid=${withVoid}`,
+    `${API_BASE_URL}/api/bets?page=${page}&month=${month}&year=${year}&withVoid=${withVoid}`,
     {
       headers: {
         Cookie: `token=${token};`,
