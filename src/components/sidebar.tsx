@@ -17,10 +17,10 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-full bg-background text-black border-r-2 border-gray-300 transition-transform duration-300 ${
+      className={`fixed top-0 left-0 min-h-full bg-background text-black border-r-2 border-gray-300 transition-transform duration-300 ${
         isCollapsed
           ? " -translate-x-16 w-16 md:relative md:w-0"
-          : "translate-x-0 w-1/3 md:relative md:w-36"
+          : "translate-x-0 w-32 md:relative md:w-36"
       }  `}
     >
       <div className="p-4 flex flex-col h-full relative">
@@ -28,8 +28,8 @@ const Sidebar: React.FC = () => {
         <button
           className={`absolute top-4 -right-5 flex items-center justify-center bg-white border border-gray-300 rounded-full p-2 shadow-md transition-all duration-300 ${
             isCollapsed
-              ? "-translate-x-[24px] -right-12 md:-right-18"
-              : "-translate-x-[24px] md:transalate-x-[180px] -right-11"
+              ? "-translate-x-[24px] -right-[48px] md:-right-[78px]"
+              : "-translate-x-[24px] md:transalate-x-[180px] -right-[44px]"
           }`}
           onClick={() => setIsCollapsed(!isCollapsed)}
           aria-label="Toggle Sidebar"
