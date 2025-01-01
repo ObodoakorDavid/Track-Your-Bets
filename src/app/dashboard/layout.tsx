@@ -32,14 +32,16 @@ export default async function DashboardLayout({
   const user = await getUser();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen relative">
       <Sidebar />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <header className="flex items-center justify-between bg-background text-black border-b-2 border-gray-300 px-6 py-4 shadow-md">
-          <h2 className="text-lg font-semibold">Dashboard</h2>
+        <header className="flex items-center justify-between bg-background text-black border-b-2 border-gray-300 px-8 md:px-6 py-4 shadow-md">
+          <h2 className="text-lg font-semibold">
+            Welcome, {user?.userName} 👋
+          </h2>
           <div className="flex items-center gap-4">
             <button className="relative">
               <Bell className="" />

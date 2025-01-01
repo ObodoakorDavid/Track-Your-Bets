@@ -31,6 +31,7 @@ export default function LoginPage() {
 
       if (response.status === 200) {
         // Redirect to dashboard after successful login
+        router.refresh();
         router.push("/dashboard");
       }
     } catch (err: unknown) {

@@ -10,11 +10,6 @@ const links = [
     label: "Bets",
     icon: <Activity className="w-4" />,
   },
-  // {
-  //   href: "/dashboard/analytics",
-  //   label: "Analytics",
-  //   icon: <BarChart className="w-4" />,
-  // },
 ];
 
 const Sidebar: React.FC = () => {
@@ -22,14 +17,20 @@ const Sidebar: React.FC = () => {
 
   return (
     <aside
-      className={`${
-        isCollapsed ? "w-16" : "w-48"
-      } bg-background text-black border-r-2 border-gray-300 transition-all duration-300`}
+      className={`fixed top-0 left-0 h-full bg-background text-black border-r-2 border-gray-300 transition-transform duration-300 ${
+        isCollapsed
+          ? " -translate-x-16 w-16 md:relative md:w-0"
+          : "translate-x-0 w-1/3 md:relative md:w-36"
+      }  `}
     >
-      <div className="p-4 flex flex-col h-full">
+      <div className="p-4 flex flex-col h-full relative">
         {/* Toggle Button */}
         <button
-          className="self-end mb-4"
+          className={`absolute top-4 -right-5 flex items-center justify-center bg-white border border-gray-300 rounded-full p-2 shadow-md transition-all duration-300 ${
+            isCollapsed
+              ? "-translate-x-[24px] -right-12 md:-right-18"
+              : "-translate-x-[24px] md:transalate-x-[180px] -right-11"
+          }`}
           onClick={() => setIsCollapsed(!isCollapsed)}
           aria-label="Toggle Sidebar"
         >
@@ -40,20 +41,13 @@ const Sidebar: React.FC = () => {
           )}
         </button>
 
-        {/* <h1
-          className={`text-2xl font-bold mb-6 ${
-            isCollapsed ? "hidden" : "block"
-          }`}
-        >
-          Track It
-        </h1> */}
-
-        <nav className="flex flex-col">
+        <nav className="flex flex-col mt-12">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center gap-2 font-font-semibold hover:bg-gray-100 px-2 py-2 rounded"
+              className="flex items-center gap-2 font-semibold hover:bg-gray-100 px-2 py-2 rounded"
+              // onClick={() => setIsCollapsed(!isCollapsed)}
             >
               {link.icon}
               {!isCollapsed && <span>{link.label}</span>}
