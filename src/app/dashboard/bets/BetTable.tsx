@@ -1,4 +1,3 @@
-// components/BetTable.tsx
 import React from "react";
 
 interface Bet {
@@ -28,28 +27,22 @@ const BetTable: React.FC<BetTableProps> = ({ bets }) => {
   };
 
   return (
-    <div className="mt-6 text-black">
-      <table className="min-w-full table-auto border-collapse border border-gray-300">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 text-left border border-gray-300">
-              Stake
-            </th>
-            <th className="px-4 py-2 text-left border border-gray-300">Odds</th>
-            <th className="px-4 py-2 text-left border border-gray-300">
-              Outcome
-            </th>
-            <th className="px-4 py-2 text-left border border-gray-300">
-              Reduced Odds
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {bets?.map((bet, index) => (
-            <tr key={index}>
-              <td className="px-4 py-2 border border-gray-300">{bet.stake}</td>
-              <td className="px-4 py-2 border border-gray-300">{bet.odds}</td>
-              <td className="px-4 py-2 border border-gray-300">
+    <div className="mt-6 text-black overflow-x-scroll">
+      <div className="border">
+        {/* Header */}
+        <div className="min-w-full grid grid-cols-4 border-b-2">
+          <span className="px-4 py-2 text-left border-r-2">Stake</span>
+          <span className="px-4 py-2 text-left border-r-2">Odds</span>
+          <span className="px-4 py-2 text-left border-r-2">Outcome</span>
+          <span className="px-4 py-2 text-left">Reduced Odds</span>
+        </div>
+        {/* Rows */}
+        {bets?.map((bet, index) => (
+          <React.Fragment key={index}>
+            <div className="grid grid-cols-4 min-w-full">
+              <span className="px-4 py-2 border-r-2">{bet.stake}</span>
+              <span className="px-4 py-2 border-r-2">{bet.odds}</span>
+              <span className="px-4 py-2 border-r-2">
                 <span
                   className={`inline-block px-2 py-1 text-xs font-medium rounded ${getBadgeColor(
                     bet.outcome
@@ -57,14 +50,12 @@ const BetTable: React.FC<BetTableProps> = ({ bets }) => {
                 >
                   {bet.outcome}
                 </span>
-              </td>
-              <td className="px-4 py-2 border border-gray-300">
-                {bet.reducedOdds ? bet.reducedOdds : "N/A"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </span>
+              <span className="px-4 py-2">{bet.reducedOdds || "N/A"}</span>
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 };

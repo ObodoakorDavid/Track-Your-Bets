@@ -37,7 +37,9 @@ export default function Dropdown({ user }: Userprops) {
         className="flex items-center gap-2 p-2 hover:bg-gray-100"
         onClick={toggleDropdown}
       >
-        <span className="font-semibold text-black">{user.userName}</span>
+        <span className="font-semibold text-black text-sm sm:text-lg">
+          {user.userName}
+        </span>
         <ChevronDown className="w-5" />
       </button>
 

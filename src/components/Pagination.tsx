@@ -54,7 +54,7 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const pageRange = getPageRange();
 
   return (
-    <div className="flex justify-center items-center space-x-2 mt-6">
+    <div className="flex flex-wrap justify-center items-center space-x-2 mt-6">
       {/* Skip Backward Button */}
       <button
         onClick={onSkipBackward}

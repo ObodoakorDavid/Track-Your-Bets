@@ -87,7 +87,7 @@ const SummaryCard: React.FC<SummaryProps> = ({ summary }) => {
     <div className="bg-white shadow-md rounded-lg p-4 mb-6 text-black">
       <div className="flex flex-col md:flex-row justify-between items-center my-4">
         <h2 className="text-2xl font-bold">Summary</h2>
-        <div className="mt-2 flex space-x-4">
+        <div className="mt-2 flex flex-wrap gap-2 items-center justify-center space-x-4">
           <div className="flex items-center space-x-2">
             <span className="text-sm min-w-max">
               {withVoid ? "With Void" : "Without Void"}
@@ -98,44 +98,47 @@ const SummaryCard: React.FC<SummaryProps> = ({ summary }) => {
               onCheckedChange={handleWithVoidToggle}
             />
           </div>
-          <Select onValueChange={handleMonthChange}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Month" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Months</SelectLabel>
-                <SelectItem value="01">January</SelectItem>
-                <SelectItem value="02">February</SelectItem>
-                <SelectItem value="03">March</SelectItem>
-                <SelectItem value="04">April</SelectItem>
-                <SelectItem value="05">May</SelectItem>
-                <SelectItem value="06">June</SelectItem>
-                <SelectItem value="07">July</SelectItem>
-                <SelectItem value="08">August</SelectItem>
-                <SelectItem value="09">September</SelectItem>
-                <SelectItem value="10">October</SelectItem>
-                <SelectItem value="11">November</SelectItem>
-                <SelectItem value="12">December</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          {/* Year Selector */}
-          <Select onValueChange={handleYearChange}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Year" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Years</SelectLabel>
-                {yearOptions.map((y) => (
-                  <SelectItem key={y} value={y}>
-                    {y}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <div>
+            <Select onValueChange={handleMonthChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Month" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Months</SelectLabel>
+                  <SelectItem value="01">January</SelectItem>
+                  <SelectItem value="02">February</SelectItem>
+                  <SelectItem value="03">March</SelectItem>
+                  <SelectItem value="04">April</SelectItem>
+                  <SelectItem value="05">May</SelectItem>
+                  <SelectItem value="06">June</SelectItem>
+                  <SelectItem value="07">July</SelectItem>
+                  <SelectItem value="08">August</SelectItem>
+                  <SelectItem value="09">September</SelectItem>
+                  <SelectItem value="10">October</SelectItem>
+                  <SelectItem value="11">November</SelectItem>
+                  <SelectItem value="12">December</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Select onValueChange={handleYearChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Years</SelectLabel>
+                  {yearOptions.map((y) => (
+                    <SelectItem key={y} value={y}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

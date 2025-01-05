@@ -61,7 +61,7 @@ export default async function BetsPage({
 
   return (
     <div className="text-black p-6">
-      <SummaryCard summary={stats} /> {/* Use the SummaryCard */}
+      <SummaryCard summary={stats} />
       <div className="bg-white rounded-lg shadow-md p-3">
         <BetHeader />
         <Suspense fallback={<Loading />}>
