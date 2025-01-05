@@ -39,7 +39,7 @@ const BetTable: React.FC<BetTableProps> = ({ bets }) => {
         {/* Rows */}
         {bets?.map((bet, index) => (
           <React.Fragment key={index}>
-            <div className="grid grid-cols-4 min-w-full">
+            <div className="grid grid-cols-4 min-w-full border-b-2">
               <span className="px-4 py-2 border-r-2">{bet.stake}</span>
               <span className="px-4 py-2 border-r-2">{bet.odds}</span>
               <span className="px-4 py-2 border-r-2">
