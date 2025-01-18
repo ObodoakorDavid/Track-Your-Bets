@@ -3,33 +3,52 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-// Define protected routes
+// Define protected and unprotected routes
 const protectedRoutes = ["/dashboard"];
+const unprotectedRoutes = ["/login", "/signup"]; // Add more unprotected routes as needed
 
 export async function middleware(req: NextRequest) {
   const token = (await cookies()).get("token")?.value; // Assuming the token is stored in cookies
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
-
-  // Check if the route is protected
   if (protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
+
     try {
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET); // Ensure this is the secret key for JWT signing
-      // Verify the JWT token
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET); 
       await jwtVerify(token, secret);
-      return NextResponse.next(); // Token is valid, proceed with the request
+      return NextResponse.next(); 
     } catch (error) {
       console.log({ error });
-      return NextResponse.redirect(new URL("/login", req.url)); // Invalid token, redirect to login
+      // Invalid token, redirect to login
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   }
 
-  return NextResponse.next();
+  // If the user is trying to access an unprotected route
+  if (
+    unprotectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
+  ) {
+    if (token) {
+      try {
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        // Verify the JWT token
+        await jwtVerify(token, secret);
+        // Token is valid, redirect to dashboard
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+      } catch (error) {
+        console.log({ error });
+        // Invalid token, allow access to the unprotected route
+        return NextResponse.next();
+      }
+    }
+  }
+
+  return NextResponse.next(); // Allow requests to other routes
 }
 
-// Apply middleware only to specific paths
+// Apply middleware to all routes (catch-all matcher)
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: "/:path*",
 };
