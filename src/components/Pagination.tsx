@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,9 +15,12 @@ interface PaginationProps {
 
 const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const router = useRouter();
+  const params = useSearchParams();
 
   const onPageChange = (page: number) => {
-    router.push(window.location.pathname + "?" + `page=${page.toString()}`);
+    const query = new URLSearchParams(params as any);
+    query.set("page", page.toString());
+    router.push(`${window.location.pathname}?${query.toString()}`);
   };
 
   const onSkipForward = () => {

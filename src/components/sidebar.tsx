@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Home, Activity, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Button } from "./ui/button";
 
 const links = [
   { href: "/dashboard", label: "Home", icon: <Home className="w-4" /> },
@@ -26,7 +27,7 @@ const Sidebar: React.FC = () => {
       <div className="p-4 flex flex-col h-full relative">
         {/* Toggle Button */}
         <button
-          className={`absolute top-4 -right-5 flex items-center justify-center bg-white border border-gray-300 rounded-full p-2 shadow-md transition-all duration-300 ${
+          className={`absolute w-12 h-12 p-0 top-4 -right-5 flex items-center justify-center bg-white border border-gray-300 rounded-full shadow-md transition-all duration-300 ${
             isCollapsed
               ? "-translate-x-[24px] -right-[48px] md:-right-[78px]"
               : "-translate-x-[24px] md:transalate-x-[180px] -right-[44px]"
@@ -47,7 +48,7 @@ const Sidebar: React.FC = () => {
               key={link.href}
               href={link.href}
               className="flex items-center gap-2 font-semibold hover:bg-gray-100 px-2 py-2 rounded"
-              // onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={() => setIsCollapsed(!isCollapsed)}
             >
               {link.icon}
               {!isCollapsed && <span>{link.label}</span>}

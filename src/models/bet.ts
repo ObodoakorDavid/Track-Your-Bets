@@ -1,5 +1,5 @@
 // models/Bet.ts
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Mongoose, Schema } from "mongoose";
 
 export interface IBet extends Document {
   userId: mongoose.Types.ObjectId; // Reference to the User model
@@ -26,6 +26,7 @@ interface IBetModel extends mongoose.Model<IBet> {
   countBets(includeVoided?: boolean): Promise<number>;
   calculateStats(
     includeVoided: boolean,
+    userId: string,
     month: number,
     year: number
   ): Promise<{
@@ -91,6 +92,7 @@ BetSchema.methods.calculateProfitLoss = function () {
 
 BetSchema.statics.calculateStats = async function (
   includeVoided = true,
+  userId,
   month: number,
   year: number
 ) {
@@ -100,6 +102,7 @@ BetSchema.statics.calculateStats = async function (
   const endDate = new Date(year, month, 0, 23, 59, 59, 999); // End of the month
 
   const matchStage = {
+    userId: mongoose.Types.ObjectId.createFromHexString(userId),
     date: { $gte: startDate, $lte: endDate },
     ...(includeVoided ? {} : { outcome: { $ne: "Void" } }),
   };
@@ -130,9 +133,6 @@ BetSchema.statics.calculateStats = async function (
       },
     },
   ]);
-
-  console.log(result[0]);
-  
 
   // Return stats or default values if no records found
   return (

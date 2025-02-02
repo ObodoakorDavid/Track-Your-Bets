@@ -64,7 +64,7 @@ export async function GET(request: Request) {
       query.date = getDateRange(parseInt(month, 10), parseInt(year, 10));
     }
 
-    console.log({ searchParams });
+    console.log(query);
 
     // Fetch bets and count for pagination
     const [bets, totalBets] = await Promise.all([
@@ -85,6 +85,7 @@ export async function GET(request: Request) {
     if (month && year) {
       stats = await Bet.calculateStats(
         withVoid === "true",
+        userId,
         Number(month),
         Number(year)
       );
@@ -102,7 +103,6 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
@@ -160,7 +160,6 @@ export async function POST(request: Request) {
       { status: 201 }
     );
   } catch (error) {
-    console.error(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

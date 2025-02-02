@@ -8,6 +8,8 @@ export interface IUser extends Document {
   userName: string;
   email: string;
   password: string;
+  googleId: string;
+  avatar: string;
   comparePassword(password: string): Promise<boolean>;
   generateAuthToken(): Promise<string>;
   verifyAuthToken(token: string): Promise<JwtPayload>;
@@ -27,6 +29,16 @@ const UserSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+    },
+    googleId: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/demmgc49v/image/upload/v1695969739/default-avatar_scnpps.jpg",
     },
   },
   { timestamps: true }

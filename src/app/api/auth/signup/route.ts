@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "../../../../lib/mongoose";
 import User from "../../../../models/user";
-import jwt from "jsonwebtoken";
+import { generateToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
-  const { userName, email, password } = await req.json(); // Get user input
-
-  console.log("Received data:", { email, password });
+  const { userName, email, password } = await req.json();
 
   // Check if email or password is missing
   if (!email || !password) {
@@ -25,11 +23,7 @@ export async function POST(req: NextRequest) {
     const newUser = await User.create({ userName, email, password });
 
     // Generate JWT token
-    const token = jwt.sign(
-      { email: newUser.email, id: newUser._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1h" }
-    );
+    const token = generateToken({ email: newUser.email, id: newUser._id });
 
     // Prepare the response
     const response = new NextResponse("User created successfully", {
@@ -50,7 +44,7 @@ export async function POST(req: NextRequest) {
     // Type narrowing for error
     if (error instanceof Error) {
       console.error("Error creating user:", error.message);
-    } 
+    }
 
     // Specific handling for Mongoose validation errors
     if (

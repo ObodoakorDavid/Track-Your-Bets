@@ -3,7 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "../../../../lib/mongoose";
 import User, { IUser } from "../../../../models/user";
-import jwt from "jsonwebtoken";
+import { generateToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
@@ -14,8 +14,6 @@ export async function POST(req: NextRequest) {
 
   try {
     await connectToDatabase();
-
-    // Find user by email
     const user: IUser | null = await User.findOne({ email });
     if (!user) {
       return new NextResponse("User not found", { status: 404 });
@@ -28,11 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate JWT token
-    const token = jwt.sign(
-      { email: user.email, id: user._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "7d" }
-    );
+    const token = generateToken({ email: user.email, id: user._id as string });
 
     const response = NextResponse.json({ message: "Login successful" });
     response.cookies.set("token", token, {

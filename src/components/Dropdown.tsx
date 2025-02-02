@@ -9,6 +9,7 @@ interface Userprops {
   user: {
     userName: string;
     email: string;
+    avatar: string;
   };
 }
 
@@ -34,18 +35,20 @@ export default function Dropdown({ user }: Userprops) {
   return (
     <div className="relative">
       <button
-        className="flex items-center gap-2 p-2 hover:bg-gray-100"
+        className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-md"
         onClick={toggleDropdown}
       >
         <span className="font-semibold text-black text-sm sm:text-lg">
           {user.userName}
         </span>
+        <img src={user.avatar} alt="user image" className="w-8 rounded-full" />
         <ChevronDown className="w-5" />
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border border-gray-200 z-10">
+        <div className="absolute right-0 mt-2 w-fit bg-white shadow-lg rounded-lg border border-gray-200 z-10">
           <ul className="text-black">
+            <li className="text- px-4 py-2 text-gray-400">{user.email}</li>
             <li>
               <Link
                 href="#"

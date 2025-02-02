@@ -6,13 +6,27 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import Link from "next/link";
+import GoogleAuthButton from "@/components/google-auth-button";
 
 type LoginFormInputs = {
   email: string;
   password: string;
 };
 
-export default function LoginPage() {
+export default function LoginPage({
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
@@ -49,57 +63,89 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center text-black bg-gray-200">
-      <div className="w-full max-w-md p-6 rounded-lg shadow-md bg-white text-black">
-        <h1 className="text-2xl font-bold text-primary mb-6">Login</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium pb-1">Email</label>
-            <Input
-              type="email"
-              {...register("email", { required: "Email is required" })}
-              className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover`}
-              placeholder="Enter your email"
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.email.message}
-              </p>
-            )}
+    <div
+      className={cn("flex flex-col gap-6 max-w-xl mx-auto my-32", className)}
+      {...props}
+    >
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardDescription>Login with your Google account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-4 mb-4">
+            <GoogleAuthButton />
           </div>
-          <div>
-            <label className="block text-sm font-medium pb-1">Password</label>
-            <Input
-              type="password"
-              {...register("password", { required: "Password is required" })}
-              className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover`}
-              placeholder="Enter your password"
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500 mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-          <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-2 bg-foreground text-background rounded-md hover:bg-hover disabled:opacity-50"
-          >
-            {isSubmitting ? "Logging in..." : "Login"}
-          </Button>
-        </form>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-6">
+              <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                <span className="relative z-10 bg-background px-2 text-muted-foreground">
+                  Or continue with
+                </span>
+              </div>
+              <div className="grid gap-6">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    type="email"
+                    {...register("email", { required: "Email is required" })}
+                    className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover`}
+                    placeholder="Enter your email"
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500 mt-1">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Password</Label>
+                    {/* <a
+                      href="#"
+                      className="ml-auto text-sm underline-offset-4 hover:underline"
+                    >
+                      Forgot your password?
+                    </a> */}
+                  </div>
+                  <Input
+                    type="password"
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                    className={`w-full mt-1 px-3 py-2 bg-background border border-border rounded-md text-black placeholder-muted focus:outline-none focus:ring focus:ring-hover`}
+                    placeholder="Enter your password"
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-red-500 mt-1">
+                      {errors.password.message}
+                    </p>
+                  )}{" "}
+                </div>
 
-        <p className="mt-4 text-sm">
-          Don&apost have an account?
-          <a
-            href="/signup"
-            className="text-primary underline font-semibold hover:text-hover"
-          >
-            Sign up
-          </a>
-        </p>
+                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+
+                <Button
+                  disabled={isSubmitting}
+                  type="submit"
+                  className="w-full"
+                >
+                  {isSubmitting ? "Logging In" : "Login"}
+                </Button>
+              </div>
+              <div className="text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="underline underline-offset-4">
+                  Sign up
+                </Link>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
+        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+        and <a href="#">Privacy Policy</a>.
       </div>
     </div>
   );

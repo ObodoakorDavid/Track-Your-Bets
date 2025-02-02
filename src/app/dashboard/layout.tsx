@@ -3,25 +3,37 @@ import Sidebar from "@/components/sidebar";
 import Dropdown from "@/components/Dropdown";
 import { cookies } from "next/headers";
 import { Bell } from "lucide-react";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { redirect } from "next/navigation";
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
 
 async function getUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  const response = await fetch(`${API_BASE_URL}/api/user`, {
-    headers: {
-      Cookie: `token=${token};`,
-    },
-    cache: "no-store", // Disable caching for dynamic data
-  });
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch user data");
+  // If there's no token, return null instead of redirecting
+  if (!token) {
+    return null;
   }
 
-  const data = await response.json();
-  return data.user;
+  try {
+    const response = await fetch(`${baseUrl}/api/user`, {
+      headers: {
+        Cookie: `token=${token};`,
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.user;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
 }
 
 export default async function DashboardLayout({
@@ -30,6 +42,11 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const user = await getUser();
+
+  // Handle redirect at the layout level
+  if (!user) {
+    redirect("/");
+  }
 
   return (
     <div className="flex min-h-screen relative">

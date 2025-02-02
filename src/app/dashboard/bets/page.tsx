@@ -5,19 +5,31 @@ import { Suspense } from "react";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/Pagination";
 import { cookies } from "next/headers";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-async function getBets(
-  page: number,
-  month: number,
-  year: number,
-  withVoid: string
-) {
+interface BetPageProps {
+  searchParams?: Promise<{
+    page?: string;
+    year?: string;
+    month?: string;
+    withVoid?: string;
+  }>;
+}
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+async function getBets(payload: {
+  page: number;
+  month: number;
+  year: number;
+  withVoid: string;
+}) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
+  const { page, month, year, withVoid } = payload;
+
   const response = await fetch(
-    `${API_BASE_URL}/api/bets?page=${page}&month=${month}&year=${year}&withVoid=${withVoid}`,
+    `${baseUrl}/api/bets?page=${page}&month=${month}&year=${year}&withVoid=${withVoid}`,
     {
       headers: {
         Cookie: `token=${token};`,
@@ -32,16 +44,7 @@ async function getBets(
   return data;
 }
 
-export default async function BetsPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{
-    page?: string;
-    year?: string;
-    month?: string;
-    withVoid?: string;
-  }>;
-}) {
+export default async function BetsPage({ searchParams }: BetPageProps) {
   const params = await searchParams;
   const page = params?.page ? parseInt(params.page, 10) : 1;
   const month = params?.month
@@ -52,12 +55,12 @@ export default async function BetsPage({
     : new Date().getFullYear();
   const withVoid = params?.withVoid || "true";
 
-  const { bets, pagination, stats } = await getBets(
+  const { bets, pagination, stats } = await getBets({
     page,
     month,
     year,
-    withVoid
-  );
+    withVoid,
+  });
 
   return (
     <div className="text-black p-6">

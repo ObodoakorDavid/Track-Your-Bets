@@ -3,6 +3,13 @@ import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import { DecodedToken } from "./next";
 
+export const generateToken = (payload: { email: string; id: string }) => {
+  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+    expiresIn: "7d",
+  });
+  return token;
+};
+
 export const verifyToken = (
   req: NextApiRequest,
   res: NextApiResponse,
