@@ -18,7 +18,7 @@ const Pagination = ({ currentPage, totalPages }: PaginationProps) => {
   const params = useSearchParams();
 
   const onPageChange = (page: number) => {
-    const query = new URLSearchParams(params as any);
+    const query = new URLSearchParams(params.toString() || "");
     query.set("page", page.toString());
     router.push(`${window.location.pathname}?${query.toString()}`);
   };

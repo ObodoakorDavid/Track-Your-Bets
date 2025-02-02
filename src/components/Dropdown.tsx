@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 
 interface Userprops {
   user: {
@@ -41,7 +42,13 @@ export default function Dropdown({ user }: Userprops) {
         <span className="font-semibold text-black text-sm sm:text-lg">
           {user.userName}
         </span>
-        <img src={user.avatar} alt="user image" className="w-8 rounded-full" />
+        <Image
+          src={user.avatar}
+          alt="user image"
+          className="w-8 rounded-full"
+          width={20}
+          height={20}
+        />
         <ChevronDown className="w-5" />
       </button>
 

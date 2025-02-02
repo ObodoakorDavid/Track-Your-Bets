@@ -13,7 +13,7 @@ interface GoogleUser {
   picture: string;
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const code = req.nextUrl.searchParams.get("code");
     if (!code) {

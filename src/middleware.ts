@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     await jwtVerify(token, secret);
     return NextResponse.next();
-  } catch (error) {
+  } catch {
     const response = NextResponse.redirect(
       new URL("/login", req.nextUrl.origin)
     );

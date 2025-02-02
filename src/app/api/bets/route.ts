@@ -102,7 +102,7 @@ export async function GET(request: Request) {
         pageSize: bets.length,
       },
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
@@ -159,7 +159,7 @@ export async function POST(request: Request) {
       { message: "Bet added successfully", newBet },
       { status: 201 }
     );
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

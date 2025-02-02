@@ -45,6 +45,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.16",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

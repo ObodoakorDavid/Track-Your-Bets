@@ -2,18 +2,14 @@ import passport from "passport";
 import connectToDatabase from "./mongoose";
 import User from "@/models/user";
 import { generateToken } from "./auth";
+import {
+  Strategy as GoogleStrategy,
+  Profile,
+  VerifyCallback,
+} from "passport-google-oauth20";
 
-interface GoogleProfile {
-  id: string;
-  emails: [{ value: string }];
-  displayName: string;
-  photos: [{ value: string }];
-}
-
-var GoogleStrategy = require("passport-google-oauth20");
-
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
 
 passport.use(
   new GoogleStrategy(
@@ -21,35 +17,45 @@ passport.use(
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: "/api/auth/google/callback",
+      passReqToCallback: true,
     },
     async (
-      accessToke: string,
-      refreshToken: string,
-      profile: GoogleProfile,
-      done: any
+      _req: object, 
+      _accessToken: string,
+      _refreshToken: string,
+      profile: Profile,
+      done: VerifyCallback
     ) => {
       try {
-        await connectToDatabase();
-        const existingUser = await User.findOne({
-          email: profile?.emails[0].value,
-        });
+        if (!profile?.emails || profile.emails.length === 0) {
+          throw new Error("No email associated with Google account");
+        }
 
-        // Generate JWT token
-        const token = generateToken({
-          email: existingUser.email,
-          id: existingUser._id,
-        });
+        const email = profile.emails[0].value;
+
+        await connectToDatabase();
+
+        const existingUser = await User.findOne({ email });
 
         if (existingUser) {
+          const token = generateToken({
+            email: existingUser.email,
+            id: existingUser._id,
+          });
           return done(null, { user: existingUser, token });
         }
 
-        // Create new user
+        // Create a new user
         const newUser = await User.create({
           googleId: profile.id,
           userName: profile.displayName,
-          email: profile.emails[0].value,
-          avatar: profile.photos[0].value,
+          email: email,
+          avatar: profile.photos?.[0]?.value || "",
+        });
+
+        const token = generateToken({
+          email: newUser.email,
+          id: newUser._id,
         });
 
         return done(null, { user: newUser, token });

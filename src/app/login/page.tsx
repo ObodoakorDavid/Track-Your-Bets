@@ -23,10 +23,7 @@ type LoginFormInputs = {
   password: string;
 };
 
-export default function LoginPage({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
@@ -63,10 +60,7 @@ export default function LoginPage({
   };
 
   return (
-    <div
-      className={cn("flex flex-col gap-6 max-w-xl mx-auto my-32", className)}
-      {...props}
-    >
+    <div className="flex flex-col gap-6 max-w-xl mx-auto my-32">
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>

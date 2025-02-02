@@ -1,5 +1,5 @@
 // models/Bet.ts
-import mongoose, { Document, Mongoose, Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 export interface IBet extends Document {
   userId: mongoose.Types.ObjectId; // Reference to the User model

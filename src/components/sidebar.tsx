@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Home, Activity, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { Button } from "./ui/button";
-
 const links = [
   { href: "/dashboard", label: "Home", icon: <Home className="w-4" /> },
   {
