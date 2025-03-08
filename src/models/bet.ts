@@ -12,27 +12,6 @@ export interface IBet extends Document {
   betType: string;
   calculateProfitLoss(): number;
   adjustForVoid(newOdds: number): void;
-  // calculateStats(): Promise<{
-  //   totalProfitLoss: 0;
-  //   totalBets: 0;
-  //   wonBets: 0;
-  //   lostBets: 0;
-  //   voidedBets: 0;
-  //   totalStake: 0;
-  // }>;
-  calculateStats(
-    includeVoided: boolean,
-    userId: string,
-    month: number,
-    year: number
-  ): Promise<{
-    totalProfitLoss: 0;
-    totalBets: 0;
-    wonBets: 0;
-    lostBets: 0;
-    voidedBets: 0;
-    totalStake: 0;
-  }>;
 }
 
 interface IBetModel extends mongoose.Model<IBet> {
@@ -165,7 +144,9 @@ BetSchema.pre("save", function (next) {
 
 BetSchema.index({ outcome: 1 });
 
-const Bet = mongoose.models.Bet || mongoose.model<IBet>("Bet", BetSchema);
+const Bet: IBetModel =
+  (mongoose.models.Bet as IBetModel) ||
+  mongoose.model<IBet, IBetModel>("Bet", BetSchema);
 console.log("BetModel loaded:", Boolean(Bet));
 
 export default Bet;
