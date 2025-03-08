@@ -1,5 +1,5 @@
 import React from "react";
-import { calculateROI } from "@/lib/utils";
+import { calculateROI, cn } from "@/lib/utils";
 
 interface Summary {
   totalBets: number;
@@ -20,11 +20,25 @@ interface StatItemProps {
   value: string | number;
 }
 
-const StatItem: React.FC<StatItemProps> = ({ label, value }) => (
-  <div className="border rounded p-3">
-    <span className="font-medium">{label}: </span> {value}
-  </div>
-);
+const StatItem: React.FC<StatItemProps> = ({ label, value }) => {
+  const isProfitLoss = label.toLowerCase().includes("profit");
+  const numericValue =
+    typeof value === "string"
+      ? parseFloat(value.replace(/[^\d.-]/g, ""))
+      : Number(value);
+
+  return (
+    <div
+      className={cn(
+        "border rounded p-3",
+        isProfitLoss && numericValue < 0 ? "border-red-300" : "",
+        isProfitLoss && numericValue >= 0 ? "border-green-300" : ""
+      )}
+    >
+      <span className="font-medium">{label}:</span> {value}
+    </div>
+  );
+};
 
 export const SummaryStats: React.FC<SummaryStatsProps> = ({ summary }) => {
   const stats = [

@@ -63,13 +63,25 @@ export async function GET(req: NextRequest) {
     }
 
     const token = generateToken({ email: user?.email, id: user._id as string });
-    // Generate JWT token
-
-    const response = NextResponse.redirect(
-      new URL("/dashboard", req.nextUrl.origin)
+    const response = new NextResponse(
+      `<script>
+      if (window.opener) {
+        window.opener.postMessage({ token: "${token}" }, "${process.env.NEXT_PUBLIC_APP_URL}");
+        window.close();
+        } else {
+          window.location.href = "/dashboard";
+      }
+      </script>`,
+      {
+        headers: {
+          "Content-Type": "text/html",
+          "Cross-Origin-Opener-Policy": "unsafe-none",
+          "Cross-Origin-Embedder-Policy": "credentialless",
+        },
+      }
     );
-
     response.cookies.set("token", token);
+
     // response.cookies.set("token", token, {
     //   httpOnly: true,
     //   secure: process.env.NODE_ENV === "production",

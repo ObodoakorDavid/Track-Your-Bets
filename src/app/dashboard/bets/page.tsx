@@ -4,7 +4,7 @@ import SummaryCard from "./SummaryCard"; // Import the separate component
 import { Suspense } from "react";
 import Loading from "@/components/ui/Loading";
 import Pagination from "@/components/Pagination";
-import { cookies } from "next/headers";
+import { getBets } from "@/app/actions/bets";
 
 interface BetPageProps {
   searchParams?: Promise<{
@@ -13,35 +13,6 @@ interface BetPageProps {
     month?: string;
     withVoid?: string;
   }>;
-}
-
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
-
-async function getBets(payload: {
-  page: number;
-  month: number;
-  year: number;
-  withVoid: string;
-}) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
-
-  const { page, month, year, withVoid } = payload;
-
-  const response = await fetch(
-    `${baseUrl}/api/bets?page=${page}&month=${month}&year=${year}&withVoid=${withVoid}`,
-    {
-      headers: {
-        Cookie: `token=${token};`,
-      },
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Oooops!");
-  }
-  const data = await response.json();
-  return data;
 }
 
 export default async function BetsPage({ searchParams }: BetPageProps) {

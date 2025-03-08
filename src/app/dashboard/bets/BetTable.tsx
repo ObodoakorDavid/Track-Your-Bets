@@ -1,6 +1,15 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import React from "react";
 
 interface Bet {
+  _id: string;
   stake: number;
   odds: number;
   outcome: "Win" | "Loss" | "Void";
@@ -12,7 +21,6 @@ interface BetTableProps {
 }
 
 const BetTable: React.FC<BetTableProps> = ({ bets }) => {
-  // Function to get badge color based on outcome
   const getBadgeColor = (outcome: "Win" | "Loss" | "Void") => {
     switch (outcome) {
       case "Win":
@@ -26,23 +34,31 @@ const BetTable: React.FC<BetTableProps> = ({ bets }) => {
     }
   };
 
+  if (!bets || bets.length === 0) {
+    return (
+      <div className="text-center py-6 text-gray-500">
+        <p>No bets found.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="mt-6 text-black overflow-x-scroll">
-      <div className="border">
-        {/* Header */}
-        <div className="min-w-full grid grid-cols-4 border-b-2">
-          <span className="px-4 py-2 text-left border-r-2">Stake</span>
-          <span className="px-4 py-2 text-left border-r-2">Odds</span>
-          <span className="px-4 py-2 text-left border-r-2">Outcome</span>
-          <span className="px-4 py-2 text-left">Reduced Odds</span>
-        </div>
-        {/* Rows */}
-        {bets?.map((bet, index) => (
-          <React.Fragment key={index}>
-            <div className="grid grid-cols-4 min-w-full border-b-2">
-              <span className="px-4 py-2 border-r-2">{bet.stake}</span>
-              <span className="px-4 py-2 border-r-2">{bet.odds}</span>
-              <span className="px-4 py-2 border-r-2">
+    <div className="mt-6 text-black overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Stake</TableHead>
+            <TableHead>Odds</TableHead>
+            <TableHead>Outcome</TableHead>
+            <TableHead>Reduced Odds</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {bets.map((bet) => (
+            <TableRow key={bet._id}>
+              <TableCell>{bet.stake}</TableCell>
+              <TableCell>{bet.odds}</TableCell>
+              <TableCell>
                 <span
                   className={`inline-block px-2 py-1 text-xs font-medium rounded ${getBadgeColor(
                     bet.outcome
@@ -50,12 +66,12 @@ const BetTable: React.FC<BetTableProps> = ({ bets }) => {
                 >
                   {bet.outcome}
                 </span>
-              </span>
-              <span className="px-4 py-2">{bet.reducedOdds || "N/A"}</span>
-            </div>
-          </React.Fragment>
-        ))}
-      </div>
+              </TableCell>
+              <TableCell>{bet.reducedOdds ?? "N/A"}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 };
