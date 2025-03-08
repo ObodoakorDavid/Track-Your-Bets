@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import axiosInstance from "@/lib/axios.config";
 
 interface AddBetModalProps {
   openModal: boolean;
@@ -41,19 +43,23 @@ const AddBetModal = ({ openModal, closeModal }: AddBetModalProps) => {
   // On form submit
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setIsLoading(true);
+    const betPromise = axiosInstance.post("/api/bets", data);
 
-    try {
-      const response = await axios.post("/api/bets", data);
-      console.log("Bet added successfully:", response.data);
-
-      reset();
-      router.refresh();
-      closeModal();
-    } catch (error) {
-      console.error("Error adding bet:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    toast.promise(betPromise, {
+      loading: "Adding...",
+      success: () => {
+        router.refresh();
+        closeModal();
+        setIsLoading(false);
+        reset();
+        return "Bet added successfully";
+      },
+      error: (error) => {
+        console.log(error);
+        setIsLoading(false);
+        return error.response?.data?.message || error?.message;
+      },
+    });
   };
 
   // Watch outcome change and trigger validation for reducedOdds if outcome is "Void"

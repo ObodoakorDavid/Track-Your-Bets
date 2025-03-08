@@ -36,7 +36,7 @@ export default async function BetsPage({ searchParams }: BetPageProps) {
   return (
     <div className="text-black p-6">
       <SummaryCard summary={stats} />
-      <div className="bg-white rounded-lg shadow-md p-3">
+      <div className="bg-white rounded-lg shadow-md p-4">
         <BetHeader />
         <Suspense fallback={<Loading />}>
           <BetTable bets={bets} />

@@ -159,9 +159,13 @@ export async function POST(request: Request) {
       { message: "Bet added successfully", newBet },
       { status: 201 }
     );
-  } catch {
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ message: error.message }, { status: 500 });
+    }
+
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }

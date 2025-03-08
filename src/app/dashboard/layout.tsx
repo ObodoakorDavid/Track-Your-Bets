@@ -59,13 +59,7 @@ export default async function DashboardLayout({
             Welcome, {user?.userName} 👋
           </h2>
           <div className="flex items-center gap-4">
-            <button className="relative">
-              <Bell className="" />
-              <span className="bg-red-500 absolute top-0 right-1 h-2 w-2 rounded-full"></span>
-            </button>
-            <div className="flex items-center gap-2">
-              <Dropdown user={user} />
-            </div>
+            <Dropdown user={user} />
           </div>
         </header>
 

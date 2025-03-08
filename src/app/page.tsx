@@ -84,13 +84,13 @@ const Footer: React.FC = () => (
     <div className="flex flex-col md:flex-row items-center justify-between max-w-4xl mx-auto px-6">
       <p>© {new Date().getFullYear()} Track It. All rights reserved.</p>
       <nav className="flex space-x-4 mt-2 md:mt-0">
-        <Link href="/about" className="hover:text-white">
+        <Link href="#" className="hover:text-white">
           About
         </Link>
-        <Link href="/contact" className="hover:text-white">
+        <Link href="#" className="hover:text-white">
           Contact
         </Link>
-        <Link href="/privacy" className="hover:text-white">
+        <Link href="#" className="hover:text-white">
           Privacy Policy
         </Link>
       </nav>

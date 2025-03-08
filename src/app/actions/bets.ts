@@ -31,19 +31,4 @@ export async function getBets(payload: {
     console.error("Error fetching bets:", error);
     throw new Error("Failed to fetch bets");
   }
-
-  //   const response = await fetch(
-  //     `${baseUrl}/api/bets?page=${page}&month=${month}&year=${year}&withVoid=${withVoid}`,
-  //     {
-  //       headers: {
-  //         Cookie: `token=${token};`,
-  //       },
-  //     }
-  //   );
-
-  //   if (!response.ok) {
-  //     throw new Error("Oooops!");
-  //   }
-  //   const data = await response.json();
-  //   return data;
 }

@@ -96,8 +96,6 @@ BetSchema.statics.calculateStats = async function (
   month: number,
   year: number
 ) {
-  console.log({ includeVoided });
-
   const startDate = new Date(year, month - 1, 1); // Start of the month
   const endDate = new Date(year, month, 0, 23, 59, 59, 999); // End of the month
 
@@ -155,4 +153,6 @@ BetSchema.pre("save", function (next) {
 
 BetSchema.index({ outcome: 1 });
 
-export default mongoose.model<IBet, IBetModel>("Bet", BetSchema);
+const BetModel = mongoose.models.Bet || mongoose.model<IBet>("Bet", BetSchema);
+
+export default BetModel;

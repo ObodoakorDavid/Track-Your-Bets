@@ -54,7 +54,6 @@ export default function LoginPage() {
       } else {
         setError("An unknown error occurred. Please try again.");
       }
-      console.error(err); // Log the error for debugging
     }
   };
 
