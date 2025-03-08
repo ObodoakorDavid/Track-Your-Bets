@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import Bet, { IBet } from "@/models/bet";
 import BetSummary, { IBetSummary } from "@/models/betSummary";
 import connectToDatabase from "@/lib/mongoose";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { DecodedToken } from "@/lib/next";
+import Bet, { IBet } from "@/models/bet";
+import mongoose from "mongoose";
 
 interface Query {
   userId: string;
@@ -83,14 +84,22 @@ export async function GET(request: Request) {
     let stats;
 
     if (month && year) {
-      stats = await Bet.calculateStats(
-        withVoid === "true",
+      // stats = await Bet.calculateStats(
+      //   withVoid === "true",
+      //   userId,
+      //   Number(month),
+      //   Number(year)
+      // );
+
+      stats = await calculateStats({
+        includeVoided: withVoid === "true",
         userId,
-        Number(month),
-        Number(year)
-      );
+        month: Number(month),
+        year: Number(year),
+      });
     }
 
+    // throw new Error('AHH')
     return NextResponse.json({
       bets,
       summary,
@@ -169,4 +178,64 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
+}
+
+export async function calculateStats({
+  includeVoided = true,
+  userId,
+  month,
+  year,
+}: {
+  includeVoided: boolean;
+  userId: string;
+  month: number;
+  year: number;
+}) {
+  const startDate = new Date(year, month - 1, 1); // Start of the month
+  const endDate = new Date(year, month, 0, 23, 59, 59, 999); // End of the month
+
+  const matchStage = {
+    userId: mongoose.Types.ObjectId.createFromHexString(userId),
+    date: { $gte: startDate, $lte: endDate },
+    ...(includeVoided ? {} : { outcome: { $ne: "Void" } }),
+  };
+
+  const result = await Bet.aggregate([
+    { $match: matchStage },
+    {
+      $group: {
+        _id: null,
+        totalProfitLoss: { $sum: "$profitLoss" }, // Includes voided bets if includeVoided is true
+        totalBets: { $sum: 1 },
+        wonBets: {
+          $sum: {
+            $cond: [{ $eq: ["$outcome", "Win"] }, 1, 0],
+          },
+        },
+        lostBets: {
+          $sum: {
+            $cond: [{ $eq: ["$outcome", "Loss"] }, 1, 0],
+          },
+        },
+        voidedBets: {
+          $sum: {
+            $cond: [{ $eq: ["$outcome", "Void"] }, 1, 0],
+          },
+        },
+        totalStake: { $sum: "$stake" },
+      },
+    },
+  ]);
+
+  // Return stats or default values if no records found
+  return (
+    result[0] || {
+      totalProfitLoss: 0,
+      totalBets: 0,
+      wonBets: 0,
+      lostBets: 0,
+      voidedBets: 0,
+      totalStake: 0,
+    }
+  );
 }

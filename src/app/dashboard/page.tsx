@@ -15,6 +15,8 @@ export default async function DashboardPage() {
     withVoid: "true",
   });
 
+  console.log({ bets });
+
   return (
     <div className="p-6 flex flex-col gap-6">
       <div className="grid gap-6 md:grid-cols-2 w-full">
